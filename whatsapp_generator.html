@@ -644,7 +644,7 @@
           <input type="text" id="set-status-time" value="7:30">
         </div>
         <div class="form-group">
-          <label>Contact Name</label>
+          <label>Contact Name / Number</label>
           <input type="text" id="set-contact-name" value="lenggo">
         </div>
       </div>
@@ -714,14 +714,31 @@
       <h2 style="color:white; margin:0 0 8px 0;">Batch WhatsApp Generator</h2>
       <p style="color:#aaa; margin:0; font-size:14px;">Generate multiple realistic WhatsApp chat images instantly.</p>
     </div>
-    <div style="display:flex; gap:12px; align-items:center; background: #222; padding: 12px 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
-      <label style="color:#bbb; font-size:14px; font-weight: 500;">Total Chats:</label>
-      <input type="number" id="batch-count" value="10" min="1" max="50" style="width:70px; padding:8px; border-radius:8px; background:#333; color:white; border:1px solid #555; text-align: center; font-weight: bold; font-size: 16px;">
-      <div style="width: 1px; height: 24px; background: #555; margin: 0 4px;"></div>
-      <label style="color:#bbb; font-size:14px; font-weight: 500;">Start Time:</label>
-      <input type="time" id="batch-time" style="padding:8px; border-radius:8px; background:#333; color:white; border:1px solid #555; font-weight: bold; font-size: 16px; cursor: pointer;">
-      <button style="background:#007bff; color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; font-weight:bold; transition: background 0.2s; margin-left: 8px;" onclick="generateBatch()">Generate Grid</button>
-      <button style="background:#005c4b; color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; font-weight:bold; display:none; transition: background 0.2s;" id="download-all-btn" onclick="downloadAllBatch()">Download All Images</button>
+    <div style="flex: 1.5; min-width: 300px; display:flex; flex-direction:column; gap:16px; background: #222; padding: 24px; border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); border: 1px solid #333;">
+      <div style="display:flex; gap:16px; align-items:center; flex-wrap: wrap;">
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <label style="color:#bbb; font-size:12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Total Chats</label>
+          <input type="number" id="batch-count" value="10" min="1" max="50" style="width:80px; padding:10px; border-radius:8px; background:#333; color:white; border:1px solid #444; text-align: center; font-weight: bold; font-size: 16px;">
+        </div>
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <label style="color:#bbb; font-size:12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Start Time</label>
+          <div style="position: relative; display: flex; align-items: center;">
+            <input type="time" id="batch-time" style="padding:10px; padding-right: 35px; border-radius:8px; background:#333; color:white; border:1px solid #444; font-weight: bold; font-size: 16px; cursor: pointer; width: 130px;">
+            <svg viewBox="0 0 24 24" width="18" height="18" style="position: absolute; right: 10px; fill: #8696a0; pointer-events: none;"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
+          </div>
+        </div>
+      </div>
+      
+      <div style="display:flex; flex-direction:column; gap:6px;">
+        <label style="color:#bbb; font-size:12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Target Phone Numbers / Names (one per line)</label>
+        <textarea id="batch-phones" placeholder="Enter numbers or names...&#10;+62 812-3456-7890&#10;Budi Santoso&#10;+62 852-9988-7766" style="width:100%; height: 90px; padding:12px; border-radius:8px; background:#333; color:white; border:1px solid #444; font-family: inherit; font-size: 14px; resize: vertical; line-height: 1.5;"></textarea>
+        <p style="color:#777; margin:4px 0 0 0; font-size:11px;">If empty, random numbers will be generated for each chat.</p>
+      </div>
+
+      <div style="display:flex; gap:12px; margin-top: 4px;">
+        <button style="flex: 1.2; background:#007bff; color:white; border:none; padding:14px; border-radius:10px; cursor:pointer; font-weight:bold; font-size: 15px; transition: all 0.2s;" onclick="generateBatch()" onmouseover="this.style.filter='brightness(1.2)'" onmouseout="this.style.filter='none'">Generate Grid</button>
+        <button style="flex: 1; background:#005c4b; color:white; border:none; padding:14px; border-radius:10px; cursor:pointer; font-weight:bold; font-size: 15px; display:none; transition: all 0.2s;" id="download-all-btn" onclick="downloadAllBatch()" onmouseover="this.style.filter='brightness(1.2)'" onmouseout="this.style.filter='none'">Download All</button>
+      </div>
     </div>
   </div>
   
@@ -945,9 +962,11 @@
   function generateRandomChats() {
     if(!confirm('Clear current messages and generate 10-20 random chats?')) return;
     
-    const randomNum = generateRandomNumber();
-    document.getElementById('set-contact-name').value = randomNum;
-    document.getElementById('contact-name-disp').innerText = randomNum;
+    const currentName = document.getElementById('set-contact-name').value.trim();
+    const nameToUse = currentName || generateRandomNumber();
+    
+    document.getElementById('set-contact-name').value = nameToUse;
+    document.getElementById('contact-name-disp').innerText = nameToUse;
 
     document.getElementById('set-avatar-init').value = '#';
     document.getElementById('avatar-init-disp').innerText = '#';
@@ -1006,7 +1025,17 @@
   }
 
   function generateBatch() {
-    const count = parseInt(document.getElementById('batch-count').value) || 10;
+    const phonesText = document.getElementById('batch-phones').value.trim();
+    let phoneList = phonesText ? phonesText.split('\n').map(p => p.trim()).filter(p => p) : [];
+    
+    let count = parseInt(document.getElementById('batch-count').value) || 10;
+    
+    // If phone list is provided, adjust count if it's default
+    if (phonesText && phoneList.length > 0 && count === 10) {
+      count = phoneList.length;
+      document.getElementById('batch-count').value = count;
+    }
+
     const grid = document.getElementById('batch-grid');
     grid.innerHTML = '';
     document.getElementById('download-all-btn').style.display = 'block';
@@ -1024,9 +1053,22 @@
     }
 
     for(let i=0; i<count; i++) {
-      const phoneNum = generateRandomNumber();
+      let phoneNum;
+      if (phoneList.length > 0) {
+        phoneNum = phoneList[i % phoneList.length];
+      } else {
+        phoneNum = generateRandomNumber();
+      }
+
       const randColor = '#' + Math.floor(Math.random()*16777215).toString(16);
       
+      // Determine avatar initials
+      let avatarInit = '#';
+      const cleanPhone = phoneNum.replace(/\s/g, '').replace(/\+/g, '').replace(/-/g, '');
+      if (isNaN(cleanPhone) || cleanPhone === '') {
+        avatarInit = phoneNum.trim().charAt(0).toUpperCase();
+      }
+
       let hour = baseHour;
       let minute = baseMinute;
       
@@ -1036,7 +1078,7 @@
 
       const chatData = {
         phoneNum: phoneNum,
-        avatarInit: '#',
+        avatarInit: avatarInit,
         avatarBg: randColor,
         statusTime: statusTime,
         messages: batchMsgs
