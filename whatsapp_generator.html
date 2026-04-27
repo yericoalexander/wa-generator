@@ -117,15 +117,22 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: #513a2a;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #e9edef;
-    font-weight: 500;
-    font-size: 18px;
     margin-left: 2px;
     margin-right: 8px;
+    overflow: hidden;
+    background-color: #2a5298; /* Default */
+    flex-shrink: 0;
+  }
+  .avatar svg {
+    width: 24px;
+    height: 24px;
+    fill: #b6e3f4;
+  }
+  .avatar img {
+    display: none;
   }
   .contact-name {
     color: var(--text-main);
@@ -352,6 +359,21 @@
     font-size: 16px;
     padding: 0 4px;
     user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+  .input-text::after {
+    content: "|";
+    color: var(--green-accent);
+    font-weight: 300;
+    font-size: 20px;
+    margin-top: -2px;
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink {
+    from, to { opacity: 1; }
+    50% { opacity: 0; }
   }
   .mic-btn {
     width: 48px;
@@ -542,6 +564,74 @@
   .del-btn:hover {
     background-color: rgba(255, 107, 107, 0.1);
   }
+
+  /* Keyboard Styles */
+  .keyboard {
+    background-color: #171717;
+    padding: 8px 4px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    user-select: none;
+    border-top: 1px solid #222;
+  }
+  .kb-row {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+  }
+  .kb-key {
+    background-color: #333333;
+    color: white;
+    border-radius: 5px;
+    flex: 1;
+    height: 42px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 400;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.5);
+  }
+  .kb-key.special {
+    background-color: #262626;
+    flex: 1.5;
+  }
+  .kb-key.space {
+    flex: 5;
+    font-size: 14px;
+    color: #888;
+  }
+  .kb-key.return {
+    background-color: #262626;
+    flex: 1.5;
+  }
+  .kb-key.shift svg, .kb-key.backspace svg, .kb-key.return svg, .kb-key.globe svg, .kb-key.mic-kb svg {
+    width: 20px;
+    height: 20px;
+    fill: white;
+  }
+  .kb-key.mic-kb {
+      background: transparent;
+      box-shadow: none;
+  }
+  
+  .kb-suggestions {
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 0;
+      background-color: #171717;
+      border-bottom: 1px solid #222;
+  }
+  .kb-suggestion {
+      color: #ccc;
+      font-size: 14px;
+  }
+
+  /* Batch Generator Custom Scroll */
+  #batch-phones-custom {
+      height: 120px !important;
+  }
 </style>
 </head>
 <body>
@@ -560,11 +650,15 @@
         <svg viewBox="0 0 24 24" width="12" height="12"><path d="M17.71 7.71L12 2h-1v7.59L6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 11 14.41V22h1l5.71-5.71-4.3-4.29 4.3-4.29zM13 5.83l1.88 1.88L13 9.59V5.83zm1.88 10.46L13 18.17v-3.76l1.88 1.88z"/></svg>
         <!-- Alarm -->
         <svg viewBox="0 0 24 24" width="12" height="12"><path d="M22 5.72l-4.6-3.86-1.29 1.53 4.6 3.86L22 5.72zM7.88 3.39L6.6 1.86 2 5.71l1.29 1.53 4.59-3.85zM12.5 8H11v6l4.75 2.85.75-1.23-4-2.37V8zM12 4c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm0 16c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7z"/></svg>
+        <!-- WiFi -->
+        <svg id="wifi-icon" viewBox="0 0 24 24" width="14" height="14" style="fill: white; margin-right: -2px;"><path d="M12 21l-12-18h24z"/></svg>
         <!-- Signal -->
         <svg viewBox="0 0 24 24" width="12" height="12"><path d="M2 22h20V2L2 22z"/></svg>
         <!-- Battery -->
-        <svg viewBox="0 0 24 24" width="12" height="12"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
-        <span style="font-size:11px; margin-left:1px;">88%</span>
+        <div style="display: flex; align-items: center; gap: 2px;">
+          <svg viewBox="0 0 24 24" width="12" height="12"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+          <span id="battery-percent-disp" style="font-size:11px; margin-left:1px;">88%</span>
+        </div>
       </div>
     </div>
 
@@ -574,8 +668,8 @@
         <div class="back-btn">
           <svg viewBox="0 0 24 24"><path d="M20 11.5H6.83l5.59-5.59L11 4.5l-7.5 7.5 7.5 7.5 1.41-1.41-5.59-5.59H20v-1z"></path></svg>
         </div>
-        <div class="avatar" id="avatar-bg-disp" style="background-color: #513a2a;">
-          <span id="avatar-init-disp">L</span>
+        <div class="avatar" id="avatar-bg-disp">
+          <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
         </div>
         <div class="contact-name" id="contact-name-disp">lenggo</div>
       </div>
@@ -626,6 +720,56 @@
       </div>
     </div>
 
+    <!-- Keyboard (Initially hidden, but will be shown in batch) -->
+    <div class="keyboard-container" id="kb-preview">
+        <div class="kb-suggestions">
+            <div class="kb-suggestion">aku</div>
+            <div class="kb-suggestion">saya</div>
+            <div class="kb-suggestion">itu</div>
+        </div>
+        <div class="keyboard">
+            <div class="kb-row">
+                <div class="kb-key">q</div><div class="kb-key">w</div><div class="kb-key">e</div><div class="kb-key">r</div><div class="kb-key">t</div>
+                <div class="kb-key">y</div><div class="kb-key">u</div><div class="kb-key">i</div><div class="kb-key">o</div><div class="kb-key">p</div>
+            </div>
+            <div class="kb-row" style="padding: 0 10px;">
+                <div class="kb-key">a</div><div class="kb-key">s</div><div class="kb-key">d</div><div class="kb-key">f</div><div class="kb-key">g</div>
+                <div class="kb-key">h</div><div class="kb-key">j</div><div class="kb-key">k</div><div class="kb-key">l</div>
+            </div>
+            <div class="kb-row">
+                <div class="kb-key special shift">
+                    <svg viewBox="0 0 24 24"><path d="M12 8.41L16.59 13 18 11.59l-6-6-6 6L7.41 13 12 8.41zM6 18h12v-2H6v2z"/></svg>
+                </div>
+                <div class="kb-key">z</div><div class="kb-key">x</div><div class="kb-key">c</div><div class="kb-key">v</div>
+                <div class="kb-key">b</div><div class="kb-key">n</div><div class="kb-key">m</div>
+                <div class="kb-key special backspace">
+                    <svg viewBox="0 0 24 24"><path d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-3 12.59L17.59 17 14 13.41 10.41 17 9 15.59 12.59 12 9 8.41 10.41 7 14 10.59 17.59 7 19 8.41 15.41 12 19 15.59z"/></svg>
+                </div>
+            </div>
+            <div class="kb-row">
+                <div class="kb-key special">123</div>
+                <div class="kb-key special">
+                    <svg viewBox="0 0 24 24" style="width:20px; height:20px; fill:white;"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg>
+                </div>
+                <div class="kb-key space">
+                    <span style="font-size: 10px; position: absolute; bottom: 2px;">ID EN</span>
+                </div>
+                <div class="kb-key special return">
+                    <svg viewBox="0 0 24 24"><path d="M19 7v4H5.83l3.58-3.59L8 6l-6 6 6 6 1.41-1.41L5.83 13H21V7z"/></svg>
+                </div>
+            </div>
+            <div class="kb-row" style="margin-top: -5px;">
+                 <div class="kb-key special globe" style="background: transparent; box-shadow: none;">
+                    <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95a15.65 15.65 0 00-1.38-3.56A8.03 8.03 0 0118.92 8zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2 0 .68.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56A7.987 7.987 0 015.08 16zm2.95-8H5.08a7.987 7.987 0 014.33-3.56A15.65 15.65 0 008.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2 0-.68.07-1.35.16-2h4.68c.09.65.16 1.32.16 2 0 .68-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95a8.03 8.03 0 01-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2 0-.68-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"/></svg>
+                </div>
+                <div style="flex: 5;"></div>
+                <div class="kb-key special mic-kb">
+                    <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Android Nav -->
     <div class="android-nav">
       <svg class="back-btn-nav" viewBox="0 0 24 24"><path d="M18 4l-10 8 10 8V4z"/></svg>
@@ -650,12 +794,10 @@
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label>Avatar Initials</label>
-          <input type="text" id="set-avatar-init" value="L" maxlength="2">
+          <label>Avatar Background</label>
+          <input type="color" id="set-avatar-bg" value="#2a5298">
         </div>
         <div class="form-group">
-          <label>Avatar Background</label>
-          <input type="color" id="set-avatar-bg" value="#513a2a">
         </div>
       </div>
     </div>
@@ -727,12 +869,26 @@
             <svg viewBox="0 0 24 24" width="18" height="18" style="position: absolute; right: 10px; fill: #8696a0; pointer-events: none;"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
           </div>
         </div>
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <label style="color:#bbb; font-size:12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Battery (%)</label>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <input type="number" id="set-battery" value="88" min="1" max="100" style="width:70px; padding:10px; border-radius:8px; background:#333; color:white; border:1px solid #444; text-align: center; font-weight: bold; font-size: 16px;">
+            <label style="display: flex; align-items: center; gap: 6px; color: #bbb; font-size: 13px; cursor: pointer;">
+              <input type="checkbox" id="battery-random-toggle" style="width: 16px; height: 16px;"> Random
+            </label>
+          </div>
+        </div>
       </div>
       
       <div style="display:flex; flex-direction:column; gap:6px;">
         <label style="color:#bbb; font-size:12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Target Phone Numbers / Names (one per line)</label>
-        <textarea id="batch-phones" placeholder="Enter numbers or names...&#10;+62 812-3456-7890&#10;Budi Santoso&#10;+62 852-9988-7766" style="width:100%; height: 90px; padding:12px; border-radius:8px; background:#333; color:white; border:1px solid #444; font-family: inherit; font-size: 14px; resize: vertical; line-height: 1.5;"></textarea>
-        <p style="color:#777; margin:4px 0 0 0; font-size:11px;">If empty, random numbers will be generated for each chat.</p>
+        <textarea id="batch-phones" placeholder="Enter numbers or names...&#10;+62 812-3456-7890&#10;Budi Santoso&#10;+62 852-9988-7766" style="width:100%; height: 70px; padding:12px; border-radius:8px; background:#333; color:white; border:1px solid #444; font-family: inherit; font-size: 14px; resize: vertical; line-height: 1.5;"></textarea>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:6px;">
+        <label style="color:#bbb; font-size:12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Custom Chat Messages (one per line)</label>
+        <textarea id="batch-messages-custom" placeholder="Enter custom messages...&#10;S: Hello (Sent)&#10;R: Hi there (Received)&#10;S: How are you?" style="width:100%; height: 90px; padding:12px; border-radius:8px; background:#333; color:white; border:1px solid #444; font-family: inherit; font-size: 14px; resize: vertical; line-height: 1.5;"></textarea>
+        <p style="color:#777; margin:4px 0 0 0; font-size:11px;">If empty, random debt-related messages will be generated.</p>
       </div>
 
       <div style="display:flex; gap:12px; margin-top: 4px;">
@@ -867,6 +1023,15 @@
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
+  function formatPhoneNumber(val) {
+    let clean = val.trim();
+    // If it starts with 0 and is likely a phone number (numeric after trimming)
+    if (clean.startsWith('0')) {
+      return '+62' + clean.substring(1);
+    }
+    return clean;
+  }
+
   function generateRandomNumber() {
     const prefixes = ['812', '813', '852', '853', '811', '821', '822', '857', '856', '895', '896', '881', '882', '878', '819'];
     const prefix = prefixes[getRandomInt(0, prefixes.length - 1)];
@@ -875,9 +1040,35 @@
     return `+62 ${prefix}-${p1}-${p2}`;
   }
 
-  function generateMessageSequence(baseHour, baseMinute, templates) {
+  function generateMessageSequence(baseHour, baseMinute, templates, customMsgs = []) {
     let msgs = [];
     let id = 1;
+    
+    // Use custom messages if provided
+    if (customMsgs && customMsgs.length > 0) {
+        customMsgs.forEach(line => {
+            let direction = 'sent';
+            let text = line;
+            
+            if (line.toUpperCase().startsWith('R:')) {
+                direction = 'received';
+                text = line.substring(2).trim();
+            } else if (line.toUpperCase().startsWith('S:')) {
+                direction = 'sent';
+                text = line.substring(2).trim();
+            }
+            
+            msgs.push({
+                id: id++,
+                direction: direction,
+                text: text,
+                time: `${baseHour.toString().padStart(2, '0')}:${baseMinute.toString().padStart(2, '0')}`,
+                tick: 'delivered'
+            });
+        });
+        return msgs;
+    }
+
     const isMorning = baseHour < 11;
     
     if (isMorning) {
@@ -963,16 +1154,33 @@
     if(!confirm('Clear current messages and generate 10-20 random chats?')) return;
     
     const currentName = document.getElementById('set-contact-name').value.trim();
-    const nameToUse = currentName || generateRandomNumber();
+    const formattedName = formatPhoneNumber(currentName);
+    const nameToUse = formattedName || generateRandomNumber();
     
     document.getElementById('set-contact-name').value = nameToUse;
     document.getElementById('contact-name-disp').innerText = nameToUse;
 
-    document.getElementById('set-avatar-init').value = '#';
-    document.getElementById('avatar-init-disp').innerText = '#';
-    const randColor = '#' + Math.floor(Math.random()*16777215).toString(16);
-    document.getElementById('set-avatar-bg').value = randColor;
-    document.getElementById('avatar-bg-disp').style.backgroundColor = randColor;
+    // Set Avatar
+    const avatarEl = document.getElementById('avatar-bg-disp');
+    const avatarColors = [
+      '#1a3a5f', '#2a5298', '#1e4d2b', '#4a1e4d', '#5d4037', 
+      '#263238', '#37474f', '#4e342e', '#455a64', '#1565c0'
+    ];
+    avatarEl.style.backgroundColor = avatarColors[getRandomInt(0, avatarColors.length - 1)];
+
+    // Battery Setting
+    const setBattery = document.getElementById('set-battery').value;
+    const isRandom = document.getElementById('battery-random-toggle').checked;
+    const batteryVal = isRandom ? getRandomInt(15, 99) : (setBattery || 88);
+    document.getElementById('battery-percent-disp').innerText = batteryVal + '%';
+
+    // Random WiFi
+    const wifiLevels = [
+      'M12 21l-12-18h24z', // full
+      'M12 21l-12-18h24z', // repeat for weight
+      'M12 21l-10-15h20z'  // slightly weaker
+    ];
+    document.getElementById('wifi-icon').querySelector('path').setAttribute('d', wifiLevels[getRandomInt(0, wifiLevels.length-1)]);
 
     messages = [];
     msgId = 1;
@@ -1028,6 +1236,9 @@
     const phonesText = document.getElementById('batch-phones').value.trim();
     let phoneList = phonesText ? phonesText.split('\n').map(p => p.trim()).filter(p => p) : [];
     
+    const customMsgsText = document.getElementById('batch-messages-custom').value.trim();
+    const customMsgsList = customMsgsText ? customMsgsText.split('\n').map(m => m.trim()).filter(m => m) : [];
+
     let count = parseInt(document.getElementById('batch-count').value) || 10;
     
     // If phone list is provided, adjust count if it's default
@@ -1055,15 +1266,13 @@
     for(let i=0; i<count; i++) {
       let phoneNum;
       if (phoneList.length > 0) {
-        phoneNum = phoneList[i % phoneList.length];
+        phoneNum = formatPhoneNumber(phoneList[i % phoneList.length]);
       } else {
         phoneNum = generateRandomNumber();
       }
 
       const randColor = '#' + Math.floor(Math.random()*16777215).toString(16);
       
-      // Determine avatar initials
-      let avatarInit = '#';
       const cleanPhone = phoneNum.replace(/\s/g, '').replace(/\+/g, '').replace(/-/g, '');
       if (isNaN(cleanPhone) || cleanPhone === '') {
         avatarInit = phoneNum.trim().charAt(0).toUpperCase();
@@ -1072,14 +1281,24 @@
       let hour = baseHour;
       let minute = baseMinute;
       
-      const batchMsgs = generateMessageSequence(hour, minute, templates);
+      const batchMsgs = generateMessageSequence(hour, minute, templates, customMsgsList);
 
       const statusTime = `${baseHour.toString().padStart(2, '0')}:${baseMinute.toString().padStart(2, '0')}`;
+      
+      const setBattery = document.getElementById('set-battery').value;
+      const isRandom = document.getElementById('battery-random-toggle').checked;
+      const batteryLevel = (isRandom ? getRandomInt(15, 99) : (setBattery || 88)) + '%';
+      
+      const avatarColors = [
+        '#1a3a5f', '#2a5298', '#1e4d2b', '#4a1e4d', '#5d4037', 
+        '#263238', '#37474f', '#4e342e', '#455a64', '#1565c0'
+      ];
+      const avatarBg = avatarColors[getRandomInt(0, avatarColors.length - 1)];
 
       const chatData = {
         phoneNum: phoneNum,
-        avatarInit: avatarInit,
-        avatarBg: randColor,
+        avatarBg: avatarBg,
+        battery: batteryLevel,
         statusTime: statusTime,
         messages: batchMsgs
       };
@@ -1102,8 +1321,17 @@
     
     newPhone.querySelector('.status-time').innerText = chatData.statusTime;
     newPhone.querySelector('.contact-name').innerText = chatData.phoneNum;
-    newPhone.querySelector('.avatar span').innerText = chatData.avatarInit;
-    newPhone.querySelector('.avatar').style.backgroundColor = chatData.avatarBg;
+    
+    // Set Avatar
+    const avatarEl = newPhone.querySelector('.avatar');
+    avatarEl.style.backgroundColor = chatData.avatarBg;
+    
+    // Set Battery
+    newPhone.querySelector('#battery-percent-disp').innerText = chatData.battery;
+    
+    // Random WiFi for each
+    const wifiPaths = ['M12 21l-12-18h24z', 'M12 21l-10-15h20z'];
+    newPhone.querySelector('#wifi-icon path').setAttribute('d', wifiPaths[getRandomInt(0, 1)]);
     
     const msgsContainer = newPhone.querySelector('.messages-container');
     msgsContainer.innerHTML = '';
@@ -1205,10 +1433,25 @@
     document.getElementById('status-time-disp').innerText = e.target.value;
   });
   document.getElementById('set-contact-name').addEventListener('input', (e) => {
-    document.getElementById('contact-name-disp').innerText = e.target.value;
+    document.getElementById('contact-name-disp').innerText = formatPhoneNumber(e.target.value);
   });
-  document.getElementById('set-avatar-init').addEventListener('input', (e) => {
-    document.getElementById('avatar-init-disp').innerText = e.target.value;
+  document.getElementById('set-battery').addEventListener('input', (e) => {
+    if (!document.getElementById('battery-random-toggle').checked) {
+      document.getElementById('battery-percent-disp').innerText = e.target.value + '%';
+    }
+  });
+  document.getElementById('battery-random-toggle').addEventListener('change', (e) => {
+    const batteryInput = document.getElementById('set-battery');
+    if (e.target.checked) {
+      batteryInput.disabled = true;
+      batteryInput.style.opacity = '0.5';
+      const rand = getRandomInt(15, 99);
+      document.getElementById('battery-percent-disp').innerText = rand + '%';
+    } else {
+      batteryInput.disabled = false;
+      batteryInput.style.opacity = '1';
+      document.getElementById('battery-percent-disp').innerText = batteryInput.value + '%';
+    }
   });
   document.getElementById('set-avatar-bg').addEventListener('input', (e) => {
     document.getElementById('avatar-bg-disp').style.backgroundColor = e.target.value;
@@ -1243,6 +1486,9 @@
   window.onload = () => {
     setCurrentTime();
     renderMessages();
+    
+    // Ensure keyboard is visible in preview for demonstration
+    document.getElementById('kb-preview').style.display = 'block';
   };
 </script>
 </body>
